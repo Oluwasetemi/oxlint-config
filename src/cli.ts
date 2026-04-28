@@ -10,7 +10,7 @@ function supportsOxfmtConfigTs(): boolean {
 function detectPresets(): string[] {
   const detected: string[] = ['base']
   if (isPackageExists('typescript')) detected.push('typescript')
-  if (['react', 'react-dom', '@tanstack/react-router', '@tanstack/start'].some(p => isPackageExists(p)))
+  if (['react', 'react-dom', '@tanstack/react-router', '@tanstack/start'].some(pkg => isPackageExists(pkg)))
     detected.push('react')
   return detected
 }
@@ -25,10 +25,12 @@ async function confirmOverwrite(file: string): Promise<boolean> {
   return ok as boolean
 }
 
+const PRESET_KEY_MAP: Record<string, string> = { tanstack: 'tanstackRouter' }
+
 function writeOxlintConfig(presets: string[]): void {
   const flagArgs = presets
     .filter(name => name !== 'base')
-    .map(name => `${name}: true`)
+    .map(name => `${PRESET_KEY_MAP[name] ?? name}: true`)
   const args = flagArgs.length > 0 ? `{ ${flagArgs.join(', ')} }` : '{}'
   const content = `import { setemiojo } from '@setemiojo/oxc-config'
 import { defineConfig } from 'oxlint'
@@ -52,12 +54,17 @@ async function writeOxfmtRcJson(): Promise<void> {
 
 function addScripts(): void {
   if (!existsSync('package.json')) return
-  const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as Record<string, unknown>
-  const scripts = (pkg['scripts'] ?? {}) as Record<string, string>
-  scripts['lint:ox'] = 'oxlint .'
-  scripts['format:ox'] = 'oxfmt .'
-  pkg['scripts'] = scripts
-  writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n')
+  try {
+    const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as Record<string, unknown>
+    const scripts = (pkg['scripts'] ?? {}) as Record<string, string>
+    scripts['lint:ox'] = 'oxlint .'
+    scripts['format:ox'] = 'oxfmt .'
+    pkg['scripts'] = scripts
+    writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n')
+  }
+  catch {
+    p.log.error('Could not update package.json — update scripts manually.')
+  }
 }
 
 export async function run(): Promise<void> {
