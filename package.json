@@ -1,0 +1,69 @@
+{
+  "name": "@setemiojo/oxc-config",
+  "version": "0.1.0",
+  "description": "Shareable OXC toolchain config for oxlint and oxfmt",
+  "type": "module",
+  "license": "MIT",
+  "author": "Oluwasetemi Ojo <setemiojo@gmail.com>",
+  "homepage": "https://github.com/Oluwasetemi/oxc-config",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oluwasetemi/oxc-config.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./oxfmt": {
+      "types": "./dist/oxfmt.d.ts",
+      "default": "./dist/oxfmt.js"
+    }
+  },
+  "bin": {
+    "oxc-config": "./bin/index.mjs"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "typegen": "tsx scripts/typegen.ts",
+    "bump": "bumpp",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "local-pkg": "^0.5.1"
+  },
+  "peerDependencies": {
+    "oxlint": ">=0.17.0",
+    "@tanstack/eslint-plugin-router": "*",
+    "oxfmt": "*"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/eslint-plugin-router": {
+      "optional": true
+    },
+    "oxfmt": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "bumpp": "^10.0.0",
+    "oxlint": "^0.17.0",
+    "tsdown": "^0.12.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}
