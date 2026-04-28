@@ -8,6 +8,8 @@ import { next } from './configs/next.js'
 import { tanstack } from './configs/tanstack.js'
 import type { OxlintConfigItem } from './typegen.js'
 
+// TanStack router packages signal a React project — react rules apply to these apps.
+// tanstackRouter option remains opt-in because it requires the optional peer dep @tanstack/eslint-plugin-router.
 const ReactPackages = ['react', 'react-dom', '@tanstack/react-router', '@tanstack/start'] as const
 
 export interface SetemiOjoOptions {

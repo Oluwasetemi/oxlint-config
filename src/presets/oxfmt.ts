@@ -1,3 +1,5 @@
+import type { Oxfmtrc } from 'oxfmt'
+
 export interface OxfmtOptions {
   printWidth?: number
   tabWidth?: number
@@ -22,6 +24,6 @@ const defaults: Required<OxfmtOptions> = {
   sortPackageJson: true,
 }
 
-export function oxfmt(options: OxfmtOptions = {}): Required<OxfmtOptions> {
+export function oxfmt(options: OxfmtOptions = {}): Oxfmtrc {
   return { ...defaults, ...options }
 }
