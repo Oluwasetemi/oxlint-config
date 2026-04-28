@@ -34,7 +34,7 @@
     "bin"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "pnpm run typegen && tsdown",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
@@ -47,7 +47,7 @@
     "local-pkg": "^0.5.1"
   },
   "peerDependencies": {
-    "oxlint": ">=0.17.0 <1.0.0",
+    "oxlint": ">=1.0.0",
     "@tanstack/eslint-plugin-router": "*",
     "oxfmt": "*"
   },
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "bumpp": "^10.0.0",
-    "oxlint": "^0.17.0",
+    "oxlint": "^1.62.0",
     "tsdown": "^0.12.0",
     "tsx": "^4.19.0",
     "typescript": "^5.8.0",
