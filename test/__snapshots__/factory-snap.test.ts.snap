@@ -1,0 +1,207 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`setemiojo factory snapshots > base + typescript + react + tanstack 1`] = `
+{
+  "extends": [
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "eslint",
+        "oxc",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "typescript",
+        "unicorn",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "react",
+        "react-perf",
+        "jsx-a11y",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+      },
+      "jsPlugins": [
+        "@tanstack/eslint-plugin-router",
+      ],
+      "plugins": [
+        "eslint",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`setemiojo factory snapshots > base + typescript + react 1`] = `
+{
+  "extends": [
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "eslint",
+        "oxc",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "typescript",
+        "unicorn",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "react",
+        "react-perf",
+        "jsx-a11y",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`setemiojo factory snapshots > base + typescript 1`] = `
+{
+  "extends": [
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "eslint",
+        "oxc",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "typescript",
+        "unicorn",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`setemiojo factory snapshots > base only 1`] = `
+{
+  "extends": [
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "eslint",
+        "oxc",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`setemiojo factory snapshots > full preset 1`] = `
+{
+  "extends": [
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "eslint",
+        "oxc",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "typescript",
+        "unicorn",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "react",
+        "react-perf",
+        "jsx-a11y",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "node",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+      },
+      "plugins": [
+        "vitest",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+        "suspicious": "warn",
+      },
+      "plugins": [
+        "nextjs",
+      ],
+    },
+    {
+      "categories": {
+        "correctness": "error",
+      },
+      "jsPlugins": [
+        "@tanstack/eslint-plugin-router",
+      ],
+      "plugins": [
+        "eslint",
+      ],
+    },
+  ],
+}
+`;
