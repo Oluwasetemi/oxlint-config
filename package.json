@@ -79,7 +79,7 @@
     "pre-commit": "npx nano-staged"
   },
   "nano-staged": {
-    "*.ts": "oxlint --fix"
+    "!(test/fixtures/input/**)*.{ts,tsx,js,jsx}": "oxlint --fix"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
