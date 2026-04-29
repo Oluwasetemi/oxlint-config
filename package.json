@@ -40,6 +40,7 @@
     "test:run": "vitest run",
     "typegen": "tsx scripts/typegen.ts",
     "versiongen": "tsx scripts/versiongen.ts",
+    "gen": "nr typegen && nr versiongen",
     "bump": "bumpp",
     "prepare": "simple-git-hooks",
     "prepublishOnly": "pnpm run build"
@@ -49,6 +50,7 @@
     "local-pkg": "^1.1.2"
   },
   "devDependencies": {
+    "@antfu/ni": "^30.1.0",
     "@types/node": "^25.6.0",
     "bumpp": "^11.0.1",
     "execa": "^9.6.1",
