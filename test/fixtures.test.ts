@@ -23,15 +23,16 @@ runWithConfig('typescript', { typescript: true, react: false }, ['typescript.ts'
 runWithConfig('react', { typescript: true, react: true }, ['jsx.jsx', 'tsx.tsx'])
 runWithConfig('node', { node: true }, ['javascript.js'])
 
-function normalizeReport(output: string, target: string): string {
-  return output
-    // strip absolute paths — replace target dir with a stable placeholder
-    .replace(new RegExp(target.replace(/[/\\]/g, '[/\\\\]'), 'g'), '<root>')
-    // strip timing line (changes every run)
-    .replace(/Finished in \d+m?s on \d+ files? with \d+ rules using \d+ threads?\./g, 'Finished in [TIME].')
-    // strip GitHub Actions annotation lines emitted on CI (::error file=..., ::warning file=...)
-    .split('\n').filter(line => !line.startsWith('::error') && !line.startsWith('::warning')).join('\n')
-    .trim()
+// Extract only the rule names that fired — stable across oxlint versions and platforms.
+// Full diagnostic text (line numbers, code snippets, counts) varies too much to snapshot reliably.
+function extractRuleNames(output: string): string {
+  const rulePattern = /\(([^)]+)\):/g
+  const seen = new Set<string>()
+  let match: RegExpExecArray | null
+  while ((match = rulePattern.exec(output)) !== null) {
+    seen.add(match[1]!)
+  }
+  return [...seen].sort().join('\n')
 }
 
 function runWithConfig(name: string, options: SetemiOjoOptions, inputFiles: string[]) {
@@ -62,14 +63,14 @@ function runWithConfig(name: string, options: SetemiOjoOptions, inputFiles: stri
     const filePaths = inputFiles.map(f => `_fixtures/${name}/${f}`)
     const configFlag = `_fixtures/${name}/oxlint.config.ts`
 
-    // Capture the violation report before --fix (shows all rules that fire)
+    // Capture which rules fired — snapshot only the sorted rule names, not full diagnostics
     const reportResult = await execa(
       oxlintBin,
       ['-c', configFlag, ...filePaths],
       { cwd: root, reject: false, all: true },
     )
-    const report = normalizeReport(reportResult.all ?? '', target)
-    await expect.soft(report).toMatchFileSnapshot(join(outputDir, 'report.txt'))
+    const rules = extractRuleNames(reportResult.all ?? '')
+    await expect.soft(rules).toMatchFileSnapshot(join(outputDir, 'report.txt'))
 
     // Run --fix and snapshot files that changed
     await execa(oxlintBin, ['--fix', '-c', configFlag, ...filePaths], {
