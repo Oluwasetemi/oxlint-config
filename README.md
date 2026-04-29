@@ -152,7 +152,7 @@ export default defineConfig({
 })
 ```
 
-Check out the [configs](https://github.com/Oluwasetemi/oxc-config/blob/main/src/configs) and [factory](https://github.com/Oluwasetemi/oxc-config/blob/main/src/factory.ts) for more details.
+Check out the [configs](https://github.com/Oluwasetemi/oxlint-config/blob/main/src/configs) and [factory](https://github.com/Oluwasetemi/oxlint-config/blob/main/src/factory.ts) for more details.
 
 ### React
 
