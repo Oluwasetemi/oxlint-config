@@ -29,6 +29,8 @@ function normalizeReport(output: string, target: string): string {
     .replace(new RegExp(target.replace(/[/\\]/g, '[/\\\\]'), 'g'), '<root>')
     // strip timing line (changes every run)
     .replace(/Finished in \d+m?s on \d+ files? with \d+ rules using \d+ threads?\./g, 'Finished in [TIME].')
+    // strip GitHub Actions annotation lines emitted on CI (::error file=..., ::warning file=...)
+    .split('\n').filter(line => !line.startsWith('::error') && !line.startsWith('::warning')).join('\n')
     .trim()
 }
 
