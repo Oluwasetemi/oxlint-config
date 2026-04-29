@@ -1,5 +1,5 @@
 {
-  "name": "@setemiojo/oxc-config",
+  "name": "@setemiojo/oxlint-config",
   "version": "0.1.0",
   "description": "Shareable OXC toolchain config for oxlint and oxfmt",
   "homepage": "https://github.com/Oluwasetemi/oxc-config",
@@ -10,7 +10,7 @@
     "url": "git+https://github.com/Oluwasetemi/oxc-config.git"
   },
   "bin": {
-    "oxc-config": "./bin/index.mjs"
+    "oxlint-config": "./bin/index.mjs"
   },
   "files": [
     "dist",

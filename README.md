@@ -1,6 +1,6 @@
-# @setemiojo/oxc-config
+# @setemiojo/oxlint-config
 
-[![npm](https://img.shields.io/npm/v/@setemiojo/oxc-config?color=444&label=)](https://npmjs.com/package/@setemiojo/oxc-config)
+[![npm](https://img.shields.io/npm/v/@setemiojo/oxlint-config?color=444&label=)](https://npmjs.com/package/@setemiojo/oxlint-config)
 
 Shareable [oxlint](https://oxc.rs/docs/guide/usage/linter) + [oxfmt](https://github.com/nicolo-ribaudo/oxfmt) config for the OXC toolchain.
 
@@ -22,7 +22,7 @@ Shareable [oxlint](https://oxc.rs/docs/guide/usage/linter) + [oxfmt](https://git
 Run the CLI to set up oxlint and oxfmt in your project with one command:
 
 ```bash
-pnpm dlx @setemiojo/oxc-config@latest
+pnpm dlx @setemiojo/oxlint-config@latest
 ```
 
 The wizard will:
@@ -34,14 +34,14 @@ The wizard will:
 ### Manual Install
 
 ```bash
-pnpm i -D oxlint @setemiojo/oxc-config
+pnpm i -D oxlint @setemiojo/oxlint-config
 ```
 
 Create `oxlint.config.ts` in your project root:
 
 ```ts
 // oxlint.config.ts
-import { setemiojo } from '@setemiojo/oxc-config'
+import { setemiojo } from '@setemiojo/oxlint-config'
 import { defineConfig } from 'oxlint'
 
 export default defineConfig(setemiojo())
@@ -117,7 +117,7 @@ All other presets are **opt-in**:
 
 ```ts
 // oxlint.config.ts
-import { setemiojo } from '@setemiojo/oxc-config'
+import { setemiojo } from '@setemiojo/oxlint-config'
 import { defineConfig } from 'oxlint'
 
 export default defineConfig(setemiojo({
@@ -139,7 +139,7 @@ You can also import individual presets and compose them manually:
 
 ```ts
 // oxlint.config.ts
-import { base, react, typescript, node } from '@setemiojo/oxc-config'
+import { base, react, typescript, node } from '@setemiojo/oxlint-config'
 import { defineConfig } from 'oxlint'
 
 export default defineConfig({
@@ -211,7 +211,7 @@ pnpm i -D oxfmt
 
 ```ts
 // oxfmt.config.ts
-import { oxfmt } from '@setemiojo/oxc-config/oxfmt'
+import { oxfmt } from '@setemiojo/oxlint-config/oxfmt'
 
 export default oxfmt()
 ```
@@ -219,13 +219,13 @@ export default oxfmt()
 ### With `.oxfmtrc.json`
 
 ```bash
-node -e "const {oxfmt}=await import('@setemiojo/oxc-config/oxfmt');const fs=await import('node:fs');fs.writeFileSync('.oxfmtrc.json',JSON.stringify(oxfmt(),null,2)+'\\n')"
+node -e "const {oxfmt}=await import('@setemiojo/oxlint-config/oxfmt');const fs=await import('node:fs');fs.writeFileSync('.oxfmtrc.json',JSON.stringify(oxfmt(),null,2)+'\\n')"
 ```
 
 ### Customize formatter options
 
 ```ts
-import { oxfmt } from '@setemiojo/oxc-config/oxfmt'
+import { oxfmt } from '@setemiojo/oxlint-config/oxfmt'
 
 export default oxfmt({
   printWidth: 120,
@@ -299,4 +299,4 @@ Yes. oxlint and ESLint target different things and don't conflict. oxlint is a f
 
 ## License
 
-[MIT](./LICENSE) License &copy; 2025-PRESENT [Oluwasetemi Ojo](https://github.com/oluwasetemi)
+[MIT](./LICENSE) License &copy; 2026-PRESENT [Oluwasetemi Ojo](https://github.com/oluwasetemi)

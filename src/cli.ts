@@ -36,7 +36,7 @@ function writeOxlintConfig(presets: string[]): void {
     .filter((name) => name !== "base")
     .map((name) => `${PRESET_KEY_MAP[name] ?? name}: true`);
   const args = flagArgs.length > 0 ? `{ ${flagArgs.join(", ")} }` : "{}";
-  const content = `import { setemiojo } from '@setemiojo/oxc-config'
+  const content = `import { setemiojo } from '@setemiojo/oxlint-config'
 import { defineConfig } from 'oxlint'
 
 export default defineConfig(setemiojo(${args}))
@@ -45,7 +45,7 @@ export default defineConfig(setemiojo(${args}))
 }
 
 function writeOxfmtConfigTs(): void {
-  const content = `import { oxfmt } from '@setemiojo/oxc-config/oxfmt'
+  const content = `import { oxfmt } from '@setemiojo/oxlint-config/oxfmt'
 export default oxfmt()
 `;
   writeFileSync("oxfmt.config.ts", content);
@@ -82,7 +82,7 @@ async function getVersionLine(): Promise<string> {
 }
 
 export async function run(): Promise<void> {
-  p.intro("@setemiojo/oxc-config");
+  p.intro("@setemiojo/oxlint-config");
 
   const versionLine = await getVersionLine();
   if (versionLine) p.log.info(versionLine);
