@@ -21,6 +21,7 @@ afterAll(async () => {
 runWithConfig('base', { typescript: false, react: false }, ['javascript.js', 'typescript.ts'])
 runWithConfig('typescript', { typescript: true, react: false }, ['typescript.ts'])
 runWithConfig('react', { typescript: true, react: true }, ['jsx.jsx', 'tsx.tsx'])
+runWithConfig('node', { node: true }, ['javascript.js'])
 
 function normalizeReport(output: string, target: string): string {
   return output

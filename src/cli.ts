@@ -1,6 +1,6 @@
 import * as p from "@clack/prompts";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { isPackageExists } from "local-pkg";
+import { getPackageInfo, isPackageExists } from "local-pkg";
 
 function supportsOxfmtConfigTs(): boolean {
   const [major, minor] = process.version.slice(1).split(".").map(Number) as [number, number];
@@ -70,8 +70,22 @@ function addScripts(): void {
   }
 }
 
+async function getVersionLine(): Promise<string> {
+  const [oxlintInfo, oxfmtInfo] = await Promise.all([
+    getPackageInfo("oxlint"),
+    getPackageInfo("oxfmt"),
+  ]);
+  const parts: string[] = [];
+  if (oxlintInfo) parts.push(`oxlint ${oxlintInfo.packageJson.version}`);
+  if (oxfmtInfo) parts.push(`oxfmt ${oxfmtInfo.packageJson.version}`);
+  return parts.length > 0 ? parts.join(" · ") : "";
+}
+
 export async function run(): Promise<void> {
   p.intro("@setemiojo/oxc-config");
+
+  const versionLine = await getVersionLine();
+  if (versionLine) p.log.info(versionLine);
 
   const tool = await p.select({
     message: "What would you like to set up?",
