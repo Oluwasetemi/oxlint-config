@@ -2,29 +2,70 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set node
+        uses: actions/setup-node@v4
         with:
-          version: 10
+          node-version: lts/*
 
-      - uses: actions/setup-node@v4
+      - name: Setup
+        run: npm i -g @antfu/ni
+
+      - name: Install
+        run: nci
+
+      - name: Build
+        run: nr build
+
+      - name: Lint
+        run: nr lint
+
+      - name: Typecheck
+        run: nr typecheck
+
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node: [lts/*]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set node ${{ matrix.node }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
+          node-version: ${{ matrix.node }}
 
-      - run: pnpm install --frozen-lockfile
+      - name: Setup
+        run: npm i -g @antfu/ni
 
-      - run: pnpm build
+      - name: Install
+        run: nci
 
-      - run: pnpm typecheck
+      - name: Build
+        run: nr build
 
-      - run: pnpm test:run
+      - name: Test
+        run: nr test
