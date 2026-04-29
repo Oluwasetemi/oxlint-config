@@ -1,11 +1,11 @@
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const node: OxlintConfigItem[] = [
   {
-    plugins: ['node'],
+    plugins: ["node"],
     categories: {
-      correctness: 'error',
-      suspicious: 'warn',
+      correctness: "error",
+      suspicious: "warn",
     },
   },
-]
+];

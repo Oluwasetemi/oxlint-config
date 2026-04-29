@@ -1,11 +1,11 @@
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const base: OxlintConfigItem[] = [
   {
-    plugins: ['eslint', 'oxc'],
+    plugins: ["eslint", "oxc"],
     categories: {
-      correctness: 'error',
-      suspicious: 'warn',
+      correctness: "error",
+      suspicious: "warn",
     },
   },
-]
+];

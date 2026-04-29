@@ -1,0 +1,119 @@
+x eslint(no-useless-escape): Unnecessary escape character 'g'
+    ,-[_fixtures/react/jsx.jsx:18:35]
+ 17 |     {greeting.endsWith(",")
+ 18 |     ? " " : <span style={{color: '\grey'}}>", "</span> }
+    :                                   ^^
+ 19 |     <em>
+    `----
+  help: Replace `\g` with `g`.
+
+  x eslint-plugin-jsx-a11y(mouse-events-have-key-events): `onMouseOver` must be accompanied by `onFocus` for accessibility.
+    ,-[_fixtures/react/jsx.jsx:15:80]
+ 14 | 
+ 15 |   return <div className='HelloWorld' title={`You are visitor number ${ num }`} onMouseOver={onMouseOver}>
+    :                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+ 16 |     <strong>{ greeting.slice( 0, 1 ).toUpperCase() + greeting.slice(1).toLowerCase() }</strong>
+    `----
+  help: Try to add `onFocus`.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+   ,-[_fixtures/react/tsx.tsx:2:11]
+ 1 | export function Component1() {
+ 2 |   return <div/>;
+   :           ^^^
+ 3 | }
+   `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+   ,-[_fixtures/react/tsx.tsx:8:12]
+ 7 |   b:2}
+ 8 |   return < a  foo= 'bar' bar={`foo` } >
+   :            ^
+ 9 |      <div {...props }
+   `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:9:7]
+  8 |   return < a  foo= 'bar' bar={`foo` } >
+  9 |      <div {...props }
+    :       ^^^
+ 10 |      a={1}
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:12:6]
+ 11 |     b="2">Inline Text</div>
+ 12 |     <Component1>
+    :      ^^^^^^^^^^
+ 13 |       Block Text
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:15:8]
+ 14 |       </Component1>
+ 15 |       <div>
+    :        ^^^
+ 16 |         Mixed
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:17:14]
+ 16 |         Mixed
+ 17 |             <div>Foo</div>
+    :              ^^^
+ 18 |           Text<b > Bar</b>
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:18:16]
+ 17 |             <div>Foo</div>
+ 18 |           Text<b > Bar</b>
+    :                ^
+ 19 |         </div>
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:20:10]
+ 19 |         </div>
+ 20 |         <p>
+    :          ^
+ 21 |           foo<i>bar</i><b>baz</b>
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:21:15]
+ 20 |         <p>
+ 21 |           foo<i>bar</i><b>baz</b>
+    :               ^
+ 22 |         </p>
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  ! eslint-plugin-react(react-in-jsx-scope): `React` must be in scope when using JSX.
+    ,-[_fixtures/react/tsx.tsx:21:25]
+ 20 |         <p>
+ 21 |           foo<i>bar</i><b>baz</b>
+    :                         ^
+ 22 |         </p>
+    `----
+  help: When using JSX, `<a />` expands to `React.createElement("a")`. Therefore the `React` variable must be in scope.
+
+  x eslint-plugin-jsx-a11y(anchor-is-valid): Missing `href` attribute for the `a` element.
+   ,-[_fixtures/react/tsx.tsx:8:12]
+ 7 |   b:2}
+ 8 |   return < a  foo= 'bar' bar={`foo` } >
+   :            ^
+ 9 |      <div {...props }
+   `----
+  help: Provide the `href` attribute for the `a` element.
+
+Found 10 warnings and 3 errors.
+Finished in [TIME].

@@ -1,0 +1,16 @@
+! eslint(no-useless-constructor): Redundant super call in constructor
+    ,-[_fixtures/typescript/typescript.ts:64:3]
+ 63 | class Dog extends Animal {
+ 64 |   constructor(private alias: string) {
+    :   ^^^^^|^^^^^
+    :        `-- This constructor is unnecessary,
+ 65 |     super(alias);
+    :     ^^^^^^|^^^^^
+    :           `-- because it only passes arguments through to the superclass
+ 66 |   }
+    `----
+  help: Remove this constructor or add code to it.
+  note: Subclasses automatically use the constructor of their superclass, making this redundant.
+
+Found 1 warning and 0 errors.
+Finished in [TIME].

@@ -47,6 +47,7 @@ oxc-config/
 ```
 
 **Tooling** (mirrors `eslint-config`):
+
 - Build: `tsdown` with `--dts`
 - Test: `vitest` snapshot tests
 - Release: `bumpp` + GitHub Actions Trusted Publishing
@@ -61,10 +62,10 @@ oxc-config/
 Users import presets directly into `oxlint.config.ts`:
 
 ```ts
-import { base, typescript, react, node, testing, next, tanstack } from '@setemiojo/oxc-config'
-import { defineConfig } from 'oxlint'
+import { base, typescript, react, node, testing, next, tanstack } from "@setemiojo/oxc-config";
+import { defineConfig } from "oxlint";
 
-export default defineConfig([...base, ...typescript, ...react])
+export default defineConfig([...base, ...typescript, ...react]);
 ```
 
 Each preset is an array of oxlint config objects. Config names follow the `setemiojo/` prefix pattern (e.g. `setemiojo/base`, `setemiojo/react`).
@@ -74,16 +75,16 @@ Each preset is an array of oxlint config objects. Config names follow the `setem
 Auto-detects from the project's `package.json` via `local-pkg`:
 
 ```ts
-import { setemiojo } from '@setemiojo/oxc-config'
+import { setemiojo } from "@setemiojo/oxc-config";
 
 export default setemiojo({
-  typescript: true,       // auto-detected: isPackageExists('typescript')
-  react: true,            // auto-detected: ReactPackages (react, react-dom, @tanstack/react-router, @tanstack/start)
-  tanstackRouter: false,  // opt-in
-  next: false,            // opt-in
-  node: false,            // opt-in
-  testing: false,         // opt-in
-})
+  typescript: true, // auto-detected: isPackageExists('typescript')
+  react: true, // auto-detected: ReactPackages (react, react-dom, @tanstack/react-router, @tanstack/start)
+  tanstackRouter: false, // opt-in
+  next: false, // opt-in
+  node: false, // opt-in
+  testing: false, // opt-in
+});
 ```
 
 `ReactPackages` mirrors the same list used in `@setemiojo/eslint-config`.
@@ -92,13 +93,14 @@ export default setemiojo({
 
 ```ts
 // oxfmt.config.ts (Node ≥ 22.18)
-import { oxfmt } from '@setemiojo/oxc-config/oxfmt'
-export default oxfmt({ singleQuote: false, printWidth: 100 })
+import { oxfmt } from "@setemiojo/oxc-config/oxfmt";
+export default oxfmt({ singleQuote: false, printWidth: 100 });
 ```
 
 `oxfmt()` merges user overrides onto the default preset and returns a plain object. When written as `.oxfmtrc.json`, the CLI serializes it to JSON at init time.
 
 **Default oxfmt preset values:**
+
 ```json
 {
   "printWidth": 100,
@@ -117,15 +119,15 @@ export default oxfmt({ singleQuote: false, printWidth: 100 })
 
 ## Tiered Preset Contents
 
-| Preset | Oxlint Plugins Enabled | Categories |
-|--------|------------------------|------------|
-| `base` | `eslint`, `oxc` | correctness, suspicious |
-| `typescript` | `typescript`, `unicorn` | correctness, suspicious |
-| `react` | `react`, `react-perf`, `jsx-a11y` | correctness, suspicious |
-| `node` | `node` | correctness, suspicious |
-| `testing` | `vitest` | correctness |
-| `next` | `nextjs` | correctness, suspicious |
-| `tanstack` | `eslint` (jsPlugins: `@tanstack/eslint-plugin-router`) | correctness |
+| Preset       | Oxlint Plugins Enabled                                 | Categories              |
+| ------------ | ------------------------------------------------------ | ----------------------- |
+| `base`       | `eslint`, `oxc`                                        | correctness, suspicious |
+| `typescript` | `typescript`, `unicorn`                                | correctness, suspicious |
+| `react`      | `react`, `react-perf`, `jsx-a11y`                      | correctness, suspicious |
+| `node`       | `node`                                                 | correctness, suspicious |
+| `testing`    | `vitest`                                               | correctness             |
+| `next`       | `nextjs`                                               | correctness, suspicious |
+| `tanstack`   | `eslint` (jsPlugins: `@tanstack/eslint-plugin-router`) | correctness             |
 
 ---
 
@@ -159,11 +161,13 @@ Interactive `@clack/prompts` wizard:
 ```
 
 **Files written:**
+
 - `oxlint.config.ts` — imports `setemiojo()` with user-selected presets
 - `oxfmt.config.ts` OR `.oxfmtrc.json` — based on Node version + user choice
 - `package.json` scripts: `"lint:ox": "oxlint ."` and `"format:ox": "oxfmt ."`
 
 **Flow rules:**
+
 - "oxlint only" → skips oxfmt Node version question
 - "oxfmt only" → skips preset multi-select
 - Existing config files → `clack confirm()` before overwriting each
@@ -193,12 +197,12 @@ For oxfmt: `oxfmt(options)` merges user overrides onto default preset → return
 
 ## Error Handling
 
-| Scenario | Behavior |
-|----------|----------|
-| Optional plugin not installed (e.g. `@tanstack/eslint-plugin-router`) | `local-pkg` check → `clack log.warn()` with install hint |
-| CLI file overwrite | `clack confirm()` → bail on "no" |
-| `oxfmt.config.ts` on Node < 22.18 (user-forced) | `clack log.warn()` with Node version requirement |
-| Unknown option passed to `setemiojo()` | TypeScript compile error (strict types via `typegen.d.ts`) |
+| Scenario                                                              | Behavior                                                   |
+| --------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Optional plugin not installed (e.g. `@tanstack/eslint-plugin-router`) | `local-pkg` check → `clack log.warn()` with install hint   |
+| CLI file overwrite                                                    | `clack confirm()` → bail on "no"                           |
+| `oxfmt.config.ts` on Node < 22.18 (user-forced)                       | `clack log.warn()` with Node version requirement           |
+| Unknown option passed to `setemiojo()`                                | TypeScript compile error (strict types via `typegen.d.ts`) |
 
 ---
 
@@ -213,14 +217,17 @@ For oxfmt: `oxfmt(options)` merges user overrides onto default preset → return
 ## Packages
 
 **Dependencies:**
+
 - `local-pkg` — package existence detection
 - `@clack/prompts` — CLI wizard
 
 **Dev dependencies:**
+
 - `oxlint` — peer (the actual linter binary)
 - `tsdown`, `vitest`, `bumpp`, `tsx`, `typescript`
 
 **Peer dependencies:**
+
 - `oxlint` — required
 - `oxfmt` — optional (only if using oxfmt preset)
 - `@tanstack/eslint-plugin-router` — optional (tanstack preset)
@@ -230,7 +237,8 @@ For oxfmt: `oxfmt(options)` merges user overrides onto default preset → return
 ## Release
 
 Same pattern as `@setemiojo/eslint-config`:
+
 - `bumpp` for version bumping
 - GitHub Actions `release.yml` with `id-token: write` for npm Trusted Publishing (OIDC, no long-lived tokens)
 - `publishConfig: { access: "public" }`
-- Repository URLs use `Oluwasetemi` (capital O) to match GitHub canonical URL for provenance validation
+- Repository URLs use `Oluwasetemi` to match GitHub canonical URL for provenance validation

@@ -1,10 +1,10 @@
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const testing: OxlintConfigItem[] = [
   {
-    plugins: ['vitest'],
+    plugins: ["vitest"],
     categories: {
-      correctness: 'error',
+      correctness: "error",
     },
   },
-]
+];

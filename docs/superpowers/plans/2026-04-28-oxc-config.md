@@ -12,36 +12,37 @@
 
 ## File Map
 
-| File | Responsibility |
-|------|---------------|
-| `package.json` | Package metadata, exports map (`./` + `./oxfmt`), bin, scripts, deps |
-| `tsconfig.json` | Strict TS, NodeNext module resolution |
-| `tsdown.config.ts` | Build entry points: index, oxfmt, cli |
-| `src/typegen.d.ts` | Extracts `OxlintConfigItem` type from oxlint's `defineConfig` signature |
-| `scripts/typegen.ts` | Script that generates `src/typegen.d.ts` |
-| `src/configs/base.ts` | eslint + oxc plugins, correctness + suspicious categories |
-| `src/configs/typescript.ts` | typescript + unicorn plugins |
-| `src/configs/react.ts` | react + react-perf + jsx-a11y plugins |
-| `src/configs/node.ts` | node plugin |
-| `src/configs/testing.ts` | vitest plugin, correctness only |
-| `src/configs/next.ts` | nextjs plugin |
-| `src/configs/tanstack.ts` | eslint plugin + jsPlugins: @tanstack/eslint-plugin-router |
-| `src/presets/oxfmt.ts` | `oxfmt()` merges user overrides onto opinionated defaults |
-| `src/factory.ts` | `setemiojo()` — auto-detects deps via local-pkg, composes presets |
-| `src/index.ts` | Public re-exports: all presets + factory + types |
-| `bin/index.mjs` | `#!/usr/bin/env node` CLI shim → `import('../dist/cli.js')` |
-| `src/cli.ts` | Full @clack/prompts init wizard |
-| `test/factory-snap.test.ts` | Vitest snapshot tests for 5 preset combos |
-| `.github/workflows/ci.yml` | pnpm install → build → typecheck → test on push/PR |
-| `.github/workflows/release.yml` | bumpp tag → npm Trusted Publishing via OIDC |
-| `.gitignore` | node_modules, dist |
-| `.npmrc` | `shamefully-hoist=false`, `strict-peer-dependencies=false` |
+| File                            | Responsibility                                                          |
+| ------------------------------- | ----------------------------------------------------------------------- |
+| `package.json`                  | Package metadata, exports map (`./` + `./oxfmt`), bin, scripts, deps    |
+| `tsconfig.json`                 | Strict TS, NodeNext module resolution                                   |
+| `tsdown.config.ts`              | Build entry points: index, oxfmt, cli                                   |
+| `src/typegen.d.ts`              | Extracts `OxlintConfigItem` type from oxlint's `defineConfig` signature |
+| `scripts/typegen.ts`            | Script that generates `src/typegen.d.ts`                                |
+| `src/configs/base.ts`           | eslint + oxc plugins, correctness + suspicious categories               |
+| `src/configs/typescript.ts`     | typescript + unicorn plugins                                            |
+| `src/configs/react.ts`          | react + react-perf + jsx-a11y plugins                                   |
+| `src/configs/node.ts`           | node plugin                                                             |
+| `src/configs/testing.ts`        | vitest plugin, correctness only                                         |
+| `src/configs/next.ts`           | nextjs plugin                                                           |
+| `src/configs/tanstack.ts`       | eslint plugin + jsPlugins: @tanstack/eslint-plugin-router               |
+| `src/presets/oxfmt.ts`          | `oxfmt()` merges user overrides onto opinionated defaults               |
+| `src/factory.ts`                | `setemiojo()` — auto-detects deps via local-pkg, composes presets       |
+| `src/index.ts`                  | Public re-exports: all presets + factory + types                        |
+| `bin/index.mjs`                 | `#!/usr/bin/env node` CLI shim → `import('../dist/cli.js')`             |
+| `src/cli.ts`                    | Full @clack/prompts init wizard                                         |
+| `test/factory-snap.test.ts`     | Vitest snapshot tests for 5 preset combos                               |
+| `.github/workflows/ci.yml`      | pnpm install → build → typecheck → test on push/PR                      |
+| `.github/workflows/release.yml` | bumpp tag → npm Trusted Publishing via OIDC                             |
+| `.gitignore`                    | node_modules, dist                                                      |
+| `.npmrc`                        | `shamefully-hoist=false`, `strict-peer-dependencies=false`              |
 
 ---
 
 ## Task 1: Project Scaffolding
 
 **Files:**
+
 - Create: `package.json`
 - Create: `tsconfig.json`
 - Create: `tsdown.config.ts`
@@ -88,10 +89,7 @@ Create `package.json`:
   "bin": {
     "oxc-config": "./bin/index.mjs"
   },
-  "files": [
-    "dist",
-    "bin"
-  ],
+  "files": ["dist", "bin"],
   "scripts": {
     "build": "tsdown",
     "typecheck": "tsc --noEmit",
@@ -156,23 +154,24 @@ Create `package.json`:
 - [ ] **Step 3: Write tsdown.config.ts**
 
 ```ts
-import { defineConfig } from 'tsdown'
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
   entry: {
-    index: 'src/index.ts',
-    oxfmt: 'src/presets/oxfmt.ts',
-    cli: 'src/cli.ts',
+    index: "src/index.ts",
+    oxfmt: "src/presets/oxfmt.ts",
+    cli: "src/cli.ts",
   },
-  format: ['esm'],
+  format: ["esm"],
   dts: true,
   clean: true,
-})
+});
 ```
 
 - [ ] **Step 4: Write .gitignore and .npmrc**
 
 `.gitignore`:
+
 ```
 node_modules
 dist
@@ -181,6 +180,7 @@ dist
 ```
 
 `.npmrc`:
+
 ```
 shamefully-hoist=false
 strict-peer-dependencies=false
@@ -206,6 +206,7 @@ git commit -m "chore: project scaffolding — package.json, tsconfig, tsdown, pn
 ## Task 2: Type Generation
 
 **Files:**
+
 - Create: `scripts/typegen.ts`
 - Create: `src/typegen.d.ts`
 
@@ -214,11 +215,11 @@ git commit -m "chore: project scaffolding — package.json, tsconfig, tsdown, pn
 Create `scripts/typegen.ts`:
 
 ```ts
-import { writeFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
+import { writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const content = `// Generated by scripts/typegen.ts — do not edit manually
 import type { defineConfig } from 'oxlint'
@@ -233,10 +234,10 @@ type _DefineConfigArg = Parameters<typeof defineConfig>[0]
 export type OxlintConfigItem = _DefineConfigArg extends (infer T)[]
   ? T
   : _DefineConfigArg
-`
+`;
 
-writeFileSync(path.join(__dirname, '../src/typegen.d.ts'), content)
-console.log('Generated src/typegen.d.ts')
+writeFileSync(path.join(__dirname, "../src/typegen.d.ts"), content);
+console.log("Generated src/typegen.d.ts");
 ```
 
 - [ ] **Step 2: Create src/ directory and run typegen**
@@ -255,6 +256,7 @@ cat src/typegen.d.ts
 ```
 
 Expected output:
+
 ```
 // Generated by scripts/typegen.ts — do not edit manually
 import type { defineConfig } from 'oxlint'
@@ -274,6 +276,7 @@ git commit -m "feat: typegen script extracts OxlintConfigItem from oxlint"
 ## Task 3: Config Presets
 
 **Files:**
+
 - Create: `src/configs/base.ts`
 - Create: `src/configs/typescript.ts`
 - Create: `src/configs/react.ts`
@@ -285,119 +288,119 @@ git commit -m "feat: typegen script extracts OxlintConfigItem from oxlint"
 - [ ] **Step 1: Write base.ts**
 
 ```ts
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const base: OxlintConfigItem[] = [
   {
-    name: 'setemiojo/base',
-    plugins: ['eslint', 'oxc'],
+    name: "setemiojo/base",
+    plugins: ["eslint", "oxc"],
     categories: {
-      correctness: 'error',
-      suspicious: 'warn',
+      correctness: "error",
+      suspicious: "warn",
     },
   },
-]
+];
 ```
 
 - [ ] **Step 2: Write typescript.ts**
 
 ```ts
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const typescript: OxlintConfigItem[] = [
   {
-    name: 'setemiojo/typescript',
-    plugins: ['typescript', 'unicorn'],
+    name: "setemiojo/typescript",
+    plugins: ["typescript", "unicorn"],
     categories: {
-      correctness: 'error',
-      suspicious: 'warn',
+      correctness: "error",
+      suspicious: "warn",
     },
   },
-]
+];
 ```
 
 - [ ] **Step 3: Write react.ts**
 
 ```ts
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const react: OxlintConfigItem[] = [
   {
-    name: 'setemiojo/react',
-    plugins: ['react', 'react-perf', 'jsx-a11y'],
+    name: "setemiojo/react",
+    plugins: ["react", "react-perf", "jsx-a11y"],
     categories: {
-      correctness: 'error',
-      suspicious: 'warn',
+      correctness: "error",
+      suspicious: "warn",
     },
   },
-]
+];
 ```
 
 - [ ] **Step 4: Write node.ts**
 
 ```ts
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const node: OxlintConfigItem[] = [
   {
-    name: 'setemiojo/node',
-    plugins: ['node'],
+    name: "setemiojo/node",
+    plugins: ["node"],
     categories: {
-      correctness: 'error',
-      suspicious: 'warn',
+      correctness: "error",
+      suspicious: "warn",
     },
   },
-]
+];
 ```
 
 - [ ] **Step 5: Write testing.ts**
 
 ```ts
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const testing: OxlintConfigItem[] = [
   {
-    name: 'setemiojo/testing',
-    plugins: ['vitest'],
+    name: "setemiojo/testing",
+    plugins: ["vitest"],
     categories: {
-      correctness: 'error',
+      correctness: "error",
     },
   },
-]
+];
 ```
 
 - [ ] **Step 6: Write next.ts**
 
 ```ts
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const next: OxlintConfigItem[] = [
   {
-    name: 'setemiojo/next',
-    plugins: ['nextjs'],
+    name: "setemiojo/next",
+    plugins: ["nextjs"],
     categories: {
-      correctness: 'error',
-      suspicious: 'warn',
+      correctness: "error",
+      suspicious: "warn",
     },
   },
-]
+];
 ```
 
 - [ ] **Step 7: Write tanstack.ts**
 
 ```ts
-import type { OxlintConfigItem } from '../typegen.js'
+import type { OxlintConfigItem } from "../typegen.js";
 
 export const tanstack: OxlintConfigItem[] = [
   {
-    name: 'setemiojo/tanstack',
-    plugins: ['eslint'],
-    jsPlugins: ['@tanstack/eslint-plugin-router'],
+    name: "setemiojo/tanstack",
+    plugins: ["eslint"],
+    jsPlugins: ["@tanstack/eslint-plugin-router"],
     categories: {
-      correctness: 'error',
+      correctness: "error",
     },
   },
-]
+];
 ```
 
 - [ ] **Step 8: Run typecheck to verify all presets type-check**
@@ -420,21 +423,22 @@ git commit -m "feat: add seven tiered oxlint config presets (base through tansta
 ## Task 4: oxfmt Preset
 
 **Files:**
+
 - Create: `src/presets/oxfmt.ts`
 
 - [ ] **Step 1: Write oxfmt.ts**
 
 ```ts
 export interface OxfmtOptions {
-  printWidth?: number
-  tabWidth?: number
-  useTabs?: boolean
-  semi?: boolean
-  singleQuote?: boolean
-  trailingComma?: 'all' | 'es5' | 'none'
-  insertFinalNewline?: boolean
-  sortImports?: boolean
-  sortPackageJson?: boolean
+  printWidth?: number;
+  tabWidth?: number;
+  useTabs?: boolean;
+  semi?: boolean;
+  singleQuote?: boolean;
+  trailingComma?: "all" | "es5" | "none";
+  insertFinalNewline?: boolean;
+  sortImports?: boolean;
+  sortPackageJson?: boolean;
 }
 
 const defaults: Required<OxfmtOptions> = {
@@ -443,14 +447,14 @@ const defaults: Required<OxfmtOptions> = {
   useTabs: false,
   semi: false,
   singleQuote: true,
-  trailingComma: 'all',
+  trailingComma: "all",
   insertFinalNewline: true,
   sortImports: false,
   sortPackageJson: true,
-}
+};
 
 export function oxfmt(options: OxfmtOptions = {}): Required<OxfmtOptions> {
-  return { ...defaults, ...options }
+  return { ...defaults, ...options };
 }
 ```
 
@@ -474,52 +478,53 @@ git commit -m "feat: add oxfmt() preset with opinionated defaults and user overr
 ## Task 5: Factory Function
 
 **Files:**
+
 - Create: `src/factory.ts`
 
 - [ ] **Step 1: Write factory.ts**
 
 ```ts
-import { isPackageExists } from 'local-pkg'
-import { base } from './configs/base.js'
-import { typescript } from './configs/typescript.js'
-import { react } from './configs/react.js'
-import { node } from './configs/node.js'
-import { testing } from './configs/testing.js'
-import { next } from './configs/next.js'
-import { tanstack } from './configs/tanstack.js'
-import type { OxlintConfigItem } from './typegen.js'
+import { isPackageExists } from "local-pkg";
+import { base } from "./configs/base.js";
+import { typescript } from "./configs/typescript.js";
+import { react } from "./configs/react.js";
+import { node } from "./configs/node.js";
+import { testing } from "./configs/testing.js";
+import { next } from "./configs/next.js";
+import { tanstack } from "./configs/tanstack.js";
+import type { OxlintConfigItem } from "./typegen.js";
 
-const ReactPackages = ['react', 'react-dom', '@tanstack/react-router', '@tanstack/start'] as const
+const ReactPackages = ["react", "react-dom", "@tanstack/react-router", "@tanstack/start"] as const;
 
 export interface SetemiOjoOptions {
-  typescript?: boolean
-  react?: boolean
-  tanstackRouter?: boolean
-  next?: boolean
-  node?: boolean
-  testing?: boolean
+  typescript?: boolean;
+  react?: boolean;
+  tanstackRouter?: boolean;
+  next?: boolean;
+  node?: boolean;
+  testing?: boolean;
 }
 
 export function setemiojo(options: SetemiOjoOptions = {}): OxlintConfigItem[] {
   const {
-    typescript: enableTypescript = isPackageExists('typescript'),
-    react: enableReact = ReactPackages.some(pkg => isPackageExists(pkg)),
+    typescript: enableTypescript = isPackageExists("typescript"),
+    react: enableReact = ReactPackages.some((pkg) => isPackageExists(pkg)),
     tanstackRouter = false,
     next: enableNext = false,
     node: enableNode = false,
     testing: enableTesting = false,
-  } = options
+  } = options;
 
-  const configs: OxlintConfigItem[] = [...base]
+  const configs: OxlintConfigItem[] = [...base];
 
-  if (enableTypescript) configs.push(...typescript)
-  if (enableReact) configs.push(...react)
-  if (enableNode) configs.push(...node)
-  if (enableTesting) configs.push(...testing)
-  if (enableNext) configs.push(...next)
-  if (tanstackRouter) configs.push(...tanstack)
+  if (enableTypescript) configs.push(...typescript);
+  if (enableReact) configs.push(...react);
+  if (enableNode) configs.push(...node);
+  if (enableTesting) configs.push(...testing);
+  if (enableNext) configs.push(...next);
+  if (tanstackRouter) configs.push(...tanstack);
 
-  return configs
+  return configs;
 }
 ```
 
@@ -543,21 +548,22 @@ git commit -m "feat: setemiojo() factory auto-detects typescript/react via local
 ## Task 6: Public Exports + Build Verification
 
 **Files:**
+
 - Create: `src/index.ts`
 
 - [ ] **Step 1: Write index.ts**
 
 ```ts
-export { base } from './configs/base.js'
-export { typescript } from './configs/typescript.js'
-export { react } from './configs/react.js'
-export { node } from './configs/node.js'
-export { testing } from './configs/testing.js'
-export { next } from './configs/next.js'
-export { tanstack } from './configs/tanstack.js'
-export { setemiojo } from './factory.js'
-export type { SetemiOjoOptions } from './factory.js'
-export type { OxlintConfigItem } from './typegen.js'
+export { base } from "./configs/base.js";
+export { typescript } from "./configs/typescript.js";
+export { react } from "./configs/react.js";
+export { node } from "./configs/node.js";
+export { testing } from "./configs/testing.js";
+export { next } from "./configs/next.js";
+export { tanstack } from "./configs/tanstack.js";
+export { setemiojo } from "./factory.js";
+export type { SetemiOjoOptions } from "./factory.js";
+export type { OxlintConfigItem } from "./typegen.js";
 ```
 
 - [ ] **Step 2: Run build**
@@ -588,6 +594,7 @@ git commit -m "feat: public exports and verified build output"
 ## Task 7: Snapshot Tests
 
 **Files:**
+
 - Create: `test/factory-snap.test.ts`
 
 - [ ] **Step 1: Write the failing tests first**
@@ -595,35 +602,27 @@ git commit -m "feat: public exports and verified build output"
 Create `test/factory-snap.test.ts`:
 
 ```ts
-import { describe, expect, it } from 'vitest'
-import { setemiojo } from '../src/factory.js'
+import { describe, expect, it } from "vitest";
+import { setemiojo } from "../src/factory.js";
 
-describe('setemiojo factory snapshots', () => {
-  it('base only', () => {
-    expect(
-      setemiojo({ typescript: false, react: false }),
-    ).toMatchSnapshot()
-  })
+describe("setemiojo factory snapshots", () => {
+  it("base only", () => {
+    expect(setemiojo({ typescript: false, react: false })).toMatchSnapshot();
+  });
 
-  it('base + typescript', () => {
-    expect(
-      setemiojo({ typescript: true, react: false }),
-    ).toMatchSnapshot()
-  })
+  it("base + typescript", () => {
+    expect(setemiojo({ typescript: true, react: false })).toMatchSnapshot();
+  });
 
-  it('base + typescript + react', () => {
-    expect(
-      setemiojo({ typescript: true, react: true }),
-    ).toMatchSnapshot()
-  })
+  it("base + typescript + react", () => {
+    expect(setemiojo({ typescript: true, react: true })).toMatchSnapshot();
+  });
 
-  it('base + typescript + react + tanstack', () => {
-    expect(
-      setemiojo({ typescript: true, react: true, tanstackRouter: true }),
-    ).toMatchSnapshot()
-  })
+  it("base + typescript + react + tanstack", () => {
+    expect(setemiojo({ typescript: true, react: true, tanstackRouter: true })).toMatchSnapshot();
+  });
 
-  it('full preset', () => {
+  it("full preset", () => {
     expect(
       setemiojo({
         typescript: true,
@@ -633,9 +632,9 @@ describe('setemiojo factory snapshots', () => {
         node: true,
         testing: true,
       }),
-    ).toMatchSnapshot()
-  })
-})
+    ).toMatchSnapshot();
+  });
+});
 ```
 
 - [ ] **Step 2: Run tests to create initial snapshots**
@@ -653,6 +652,7 @@ cat test/__snapshots__/factory-snap.test.ts.snap
 ```
 
 Verify each snapshot:
+
 - `base only` → 1 item with `name: 'setemiojo/base'`, `plugins: ['eslint', 'oxc']`
 - `base + typescript` → 2 items, second has `name: 'setemiojo/typescript'`, `plugins: ['typescript', 'unicorn']`
 - `base + typescript + react` → 3 items, third has `name: 'setemiojo/react'`, `plugins: ['react', 'react-perf', 'jsx-a11y']`
@@ -671,6 +671,7 @@ git commit -m "test: snapshot tests for all five setemiojo() preset combos"
 ## Task 8: CLI Implementation
 
 **Files:**
+
 - Create: `src/cli.ts`
 - Create: `bin/index.mjs`
 
@@ -684,7 +685,7 @@ Create `bin/index.mjs`:
 
 ```js
 #!/usr/bin/env node
-import('../dist/cli.js').then(({ run }) => run())
+import("../dist/cli.js").then(({ run }) => run());
 ```
 
 Make it executable:
@@ -696,139 +697,158 @@ chmod +x bin/index.mjs
 - [ ] **Step 2: Write src/cli.ts**
 
 ```ts
-import * as p from '@clack/prompts'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { isPackageExists } from 'local-pkg'
+import * as p from "@clack/prompts";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { isPackageExists } from "local-pkg";
 
 function getNodeVersion(): [number, number] {
-  const [major, minor] = process.version.slice(1).split('.').map(Number) as [number, number]
-  return [major, minor]
+  const [major, minor] = process.version.slice(1).split(".").map(Number) as [number, number];
+  return [major, minor];
 }
 
 function supportsOxfmtConfigTs(): boolean {
-  const [major, minor] = getNodeVersion()
-  return major > 22 || (major === 22 && minor >= 18)
+  const [major, minor] = getNodeVersion();
+  return major > 22 || (major === 22 && minor >= 18);
 }
 
 function detectPresets(): string[] {
-  const detected: string[] = ['base']
-  if (isPackageExists('typescript')) detected.push('typescript')
-  if (['react', 'react-dom', '@tanstack/react-router', '@tanstack/start'].some(p => isPackageExists(p)))
-    detected.push('react')
-  return detected
+  const detected: string[] = ["base"];
+  if (isPackageExists("typescript")) detected.push("typescript");
+  if (
+    ["react", "react-dom", "@tanstack/react-router", "@tanstack/start"].some((p) =>
+      isPackageExists(p),
+    )
+  )
+    detected.push("react");
+  return detected;
 }
 
 async function confirmOverwrite(file: string): Promise<boolean> {
-  if (!existsSync(file)) return true
-  const ok = await p.confirm({ message: `${file} already exists. Overwrite?` })
-  if (p.isCancel(ok)) { p.cancel('Cancelled'); process.exit(0) }
-  return ok as boolean
+  if (!existsSync(file)) return true;
+  const ok = await p.confirm({ message: `${file} already exists. Overwrite?` });
+  if (p.isCancel(ok)) {
+    p.cancel("Cancelled");
+    process.exit(0);
+  }
+  return ok as boolean;
 }
 
 function writeOxlintConfig(presets: string[]): void {
-  const presetArgs = presets.map(name => `${name}: true`).join(', ')
+  const presetArgs = presets.map((name) => `${name}: true`).join(", ");
   const content = `import { setemiojo } from '@setemiojo/oxc-config'
 import { defineConfig } from 'oxlint'
 
 export default defineConfig(setemiojo({ ${presetArgs} }))
-`
-  writeFileSync('oxlint.config.ts', content)
+`;
+  writeFileSync("oxlint.config.ts", content);
 }
 
 function writeOxfmtConfigTs(): void {
   const content = `import { oxfmt } from '@setemiojo/oxc-config/oxfmt'
 export default oxfmt()
-`
-  writeFileSync('oxfmt.config.ts', content)
+`;
+  writeFileSync("oxfmt.config.ts", content);
 }
 
 function writeOxfmtRcJson(): void {
-  const { oxfmt } = await import('./presets/oxfmt.js')
-  writeFileSync('.oxfmtrc.json', JSON.stringify(oxfmt(), null, 2) + '\n')
+  const { oxfmt } = await import("./presets/oxfmt.js");
+  writeFileSync(".oxfmtrc.json", JSON.stringify(oxfmt(), null, 2) + "\n");
 }
 
 function addScripts(): void {
-  if (!existsSync('package.json')) return
-  const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-  pkg.scripts ??= {}
-  pkg.scripts['lint:ox'] = 'oxlint .'
-  pkg.scripts['format:ox'] = 'oxfmt .'
-  writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n')
+  if (!existsSync("package.json")) return;
+  const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+  pkg.scripts ??= {};
+  pkg.scripts["lint:ox"] = "oxlint .";
+  pkg.scripts["format:ox"] = "oxfmt .";
+  writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
 }
 
 export async function run(): Promise<void> {
-  p.intro('@setemiojo/oxc-config')
+  p.intro("@setemiojo/oxc-config");
 
   const tool = await p.select({
-    message: 'What would you like to set up?',
+    message: "What would you like to set up?",
     options: [
-      { value: 'both', label: 'both (recommended)' },
-      { value: 'oxlint', label: 'oxlint only' },
-      { value: 'oxfmt', label: 'oxfmt only' },
+      { value: "both", label: "both (recommended)" },
+      { value: "oxlint", label: "oxlint only" },
+      { value: "oxfmt", label: "oxfmt only" },
     ],
-    initialValue: 'both',
-  })
-  if (p.isCancel(tool)) { p.cancel('Cancelled'); process.exit(0) }
+    initialValue: "both",
+  });
+  if (p.isCancel(tool)) {
+    p.cancel("Cancelled");
+    process.exit(0);
+  }
 
-  const setupOxlint = tool === 'both' || tool === 'oxlint'
-  const setupOxfmt = tool === 'both' || tool === 'oxfmt'
+  const setupOxlint = tool === "both" || tool === "oxlint";
+  const setupOxfmt = tool === "both" || tool === "oxfmt";
 
-  let selectedPresets: string[] = []
+  let selectedPresets: string[] = [];
   if (setupOxlint) {
-    const detectedPresets = detectPresets()
+    const detectedPresets = detectPresets();
     const presetResult = await p.multiselect({
-      message: 'Which presets?',
+      message: "Which presets?",
       options: [
-        { value: 'base', label: 'base' },
-        { value: 'typescript', label: 'typescript' },
-        { value: 'react', label: 'react' },
-        { value: 'node', label: 'node' },
-        { value: 'testing', label: 'testing' },
-        { value: 'next', label: 'next' },
-        { value: 'tanstack', label: 'tanstack' },
+        { value: "base", label: "base" },
+        { value: "typescript", label: "typescript" },
+        { value: "react", label: "react" },
+        { value: "node", label: "node" },
+        { value: "testing", label: "testing" },
+        { value: "next", label: "next" },
+        { value: "tanstack", label: "tanstack" },
       ],
       initialValues: detectedPresets,
-    })
-    if (p.isCancel(presetResult)) { p.cancel('Cancelled'); process.exit(0) }
-    selectedPresets = presetResult as string[]
+    });
+    if (p.isCancel(presetResult)) {
+      p.cancel("Cancelled");
+      process.exit(0);
+    }
+    selectedPresets = presetResult as string[];
   }
 
-  let useConfigTs = false
+  let useConfigTs = false;
   if (setupOxfmt) {
-    const nodeSupports = supportsOxfmtConfigTs()
+    const nodeSupports = supportsOxfmtConfigTs();
     const oxfmtFormat = await p.select({
-      message: 'Use oxfmt.config.ts? (requires Node ≥ 22.18)',
+      message: "Use oxfmt.config.ts? (requires Node ≥ 22.18)",
       options: [
-        { value: 'ts', label: 'yes, oxfmt.config.ts' },
-        { value: 'json', label: 'no, write .oxfmtrc.json instead' },
+        { value: "ts", label: "yes, oxfmt.config.ts" },
+        { value: "json", label: "no, write .oxfmtrc.json instead" },
       ],
-      initialValue: nodeSupports ? 'ts' : 'json',
-    })
-    if (p.isCancel(oxfmtFormat)) { p.cancel('Cancelled'); process.exit(0) }
-    useConfigTs = oxfmtFormat === 'ts'
+      initialValue: nodeSupports ? "ts" : "json",
+    });
+    if (p.isCancel(oxfmtFormat)) {
+      p.cancel("Cancelled");
+      process.exit(0);
+    }
+    useConfigTs = oxfmtFormat === "ts";
     if (useConfigTs && !nodeSupports) {
-      p.log.warn('oxfmt.config.ts requires Node ≥ 22.18. Current: ' + process.version)
+      p.log.warn("oxfmt.config.ts requires Node ≥ 22.18. Current: " + process.version);
     }
   }
 
-  const addScriptsResult = await p.confirm({ message: 'Add scripts to package.json?' })
-  if (p.isCancel(addScriptsResult)) { p.cancel('Cancelled'); process.exit(0) }
+  const addScriptsResult = await p.confirm({ message: "Add scripts to package.json?" });
+  if (p.isCancel(addScriptsResult)) {
+    p.cancel("Cancelled");
+    process.exit(0);
+  }
 
-  if (setupOxlint && (await confirmOverwrite('oxlint.config.ts'))) {
-    writeOxlintConfig(selectedPresets)
+  if (setupOxlint && (await confirmOverwrite("oxlint.config.ts"))) {
+    writeOxlintConfig(selectedPresets);
   }
 
   if (setupOxfmt) {
-    if (useConfigTs && (await confirmOverwrite('oxfmt.config.ts'))) {
-      writeOxfmtConfigTs()
-    } else if (!useConfigTs && (await confirmOverwrite('.oxfmtrc.json'))) {
-      await writeOxfmtRcJson()
+    if (useConfigTs && (await confirmOverwrite("oxfmt.config.ts"))) {
+      writeOxfmtConfigTs();
+    } else if (!useConfigTs && (await confirmOverwrite(".oxfmtrc.json"))) {
+      await writeOxfmtRcJson();
     }
   }
 
-  if (addScriptsResult) addScripts()
+  if (addScriptsResult) addScripts();
 
-  p.outro('Done!')
+  p.outro("Done!");
 }
 ```
 
@@ -838,20 +858,21 @@ The `writeOxfmtRcJson` function above has a bug: `await import` inside a non-asy
 
 ```ts
 async function writeOxfmtRcJson(): Promise<void> {
-  const { oxfmt } = await import('./presets/oxfmt.js')
-  writeFileSync('.oxfmtrc.json', JSON.stringify(oxfmt(), null, 2) + '\n')
+  const { oxfmt } = await import("./presets/oxfmt.js");
+  writeFileSync(".oxfmtrc.json", JSON.stringify(oxfmt(), null, 2) + "\n");
 }
 ```
 
 And at the call site in `run()`:
+
 ```ts
-  if (setupOxfmt) {
-    if (useConfigTs && (await confirmOverwrite('oxfmt.config.ts'))) {
-      writeOxfmtConfigTs()
-    } else if (!useConfigTs && (await confirmOverwrite('.oxfmtrc.json'))) {
-      await writeOxfmtRcJson()
-    }
+if (setupOxfmt) {
+  if (useConfigTs && (await confirmOverwrite("oxfmt.config.ts"))) {
+    writeOxfmtConfigTs();
+  } else if (!useConfigTs && (await confirmOverwrite(".oxfmtrc.json"))) {
+    await writeOxfmtRcJson();
   }
+}
 ```
 
 - [ ] **Step 4: Run typecheck and build**
@@ -882,6 +903,7 @@ git commit -m "feat: @clack/prompts init CLI writes oxlint.config.ts / .oxfmtrc.
 ## Task 9: GitHub Actions
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`
 - Create: `.github/workflows/release.yml`
 
@@ -936,7 +958,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   release:
@@ -1002,6 +1024,7 @@ EOF
 ```
 
 Expected:
+
 ```
 setemiojo: function
 base length: 1

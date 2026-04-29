@@ -1,15 +1,15 @@
-import type { Oxfmtrc } from 'oxfmt'
+import type { Oxfmtrc } from "oxfmt";
 
 export interface OxfmtOptions {
-  printWidth?: number
-  tabWidth?: number
-  useTabs?: boolean
-  semi?: boolean
-  singleQuote?: boolean
-  trailingComma?: 'all' | 'es5' | 'none'
-  insertFinalNewline?: boolean
-  sortImports?: boolean
-  sortPackageJson?: boolean
+  printWidth?: number;
+  tabWidth?: number;
+  useTabs?: boolean;
+  semi?: boolean;
+  singleQuote?: boolean;
+  trailingComma?: "all" | "es5" | "none";
+  insertFinalNewline?: boolean;
+  sortImports?: boolean;
+  sortPackageJson?: boolean;
 }
 
 const defaults: Required<OxfmtOptions> = {
@@ -18,12 +18,12 @@ const defaults: Required<OxfmtOptions> = {
   useTabs: false,
   semi: false,
   singleQuote: true,
-  trailingComma: 'all',
+  trailingComma: "all",
   insertFinalNewline: true,
   sortImports: false,
   sortPackageJson: true,
-}
+};
 
 export function oxfmt(options: OxfmtOptions = {}): Oxfmtrc {
-  return { ...defaults, ...options }
+  return { ...defaults, ...options };
 }
