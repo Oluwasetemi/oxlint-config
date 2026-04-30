@@ -1,6 +1,6 @@
 {
   "name": "@setemiojo/oxlint-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shareable OXC toolchain config for oxlint and oxfmt",
   "homepage": "https://github.com/Oluwasetemi/oxlint-config",
   "license": "MIT",
