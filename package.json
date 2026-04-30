@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "pnpm run typegen && pnpm run versiongen && tsdown",
-    "lint": "oxlint . --ignore-pattern test/fixtures/input --ignore-pattern _fixtures",
+    "lint": "oxlint . --ignore-pattern test/fixtures --ignore-pattern _fixtures",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
