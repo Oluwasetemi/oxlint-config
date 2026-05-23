@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { getPackageInfo, isPackageExists } from "local-pkg";
 
@@ -93,6 +93,49 @@ function addScripts(): void {
   }
 }
 
+function mergeJsonFile(filePath: string, patch: Record<string, unknown>): void {
+  let existing: Record<string, unknown> = {};
+  if (existsSync(filePath)) {
+    try {
+      existing = JSON.parse(readFileSync(filePath, "utf8")) as Record<string, unknown>;
+    } catch {}
+  }
+  writeFileSync(filePath, JSON.stringify({ ...existing, ...patch }, null, 2) + "\n");
+}
+
+function writeVSCodeConfig(): void {
+  mkdirSync(".vscode", { recursive: true });
+
+  // Recommend the extension
+  let ext: { recommendations: string[] } = { recommendations: [] };
+  if (existsSync(".vscode/extensions.json")) {
+    try {
+      ext = JSON.parse(readFileSync(".vscode/extensions.json", "utf8")) as typeof ext;
+    } catch {}
+  }
+  if (!ext.recommendations.includes("oxc.oxc-vscode")) {
+    ext.recommendations.push("oxc.oxc-vscode");
+  }
+  writeFileSync(".vscode/extensions.json", JSON.stringify(ext, null, 2) + "\n");
+
+  // Merge settings
+  mergeJsonFile(".vscode/settings.json", {
+    "oxc.enable": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.oxc": "explicit",
+    },
+  });
+}
+
+function writeZedConfig(): void {
+  mkdirSync(".zed", { recursive: true });
+  mergeJsonFile(".zed/settings.json", {
+    code_actions_on_format: {
+      "source.fixAll.oxc": true,
+    },
+  });
+}
+
 async function getVersionLine(): Promise<string> {
   const [oxlintInfo, oxfmtInfo] = await Promise.all([
     getPackageInfo("oxlint"),
@@ -177,6 +220,20 @@ export async function run(): Promise<void> {
     process.exit(0);
   }
 
+  const editorResult = await p.multiselect({
+    message: "Configure editor integration?",
+    options: [
+      { value: "vscode", label: "VS Code (.vscode/settings.json + extensions.json)" },
+      { value: "zed", label: "Zed (.zed/settings.json)" },
+    ],
+    required: false,
+  });
+  if (p.isCancel(editorResult)) {
+    p.cancel("Cancelled");
+    process.exit(0);
+  }
+  const editors = editorResult as string[];
+
   if (setupOxlint && (await confirmOverwrite("oxlint.config.ts"))) {
     writeOxlintConfig(selectedPresets);
   }
@@ -192,6 +249,9 @@ export async function run(): Promise<void> {
   if (addScriptsResult) {
     addScripts();
   }
+
+  if (editors.includes("vscode")) writeVSCodeConfig();
+  if (editors.includes("zed")) writeZedConfig();
 
   const toInstall: string[] = [];
   if (!isPackageExists("@setemiojo/oxlint-config")) toInstall.push("@setemiojo/oxlint-config");
