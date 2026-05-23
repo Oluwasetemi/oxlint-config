@@ -1,6 +1,29 @@
 import * as p from "@clack/prompts";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { getPackageInfo, isPackageExists } from "local-pkg";
+
+function detectPackageManager(): string {
+  if (existsSync("pnpm-lock.yaml")) return "pnpm";
+  if (existsSync("yarn.lock")) return "yarn";
+  if (existsSync("bun.lockb") || existsSync("bun.lock")) return "bun";
+  return "npm";
+}
+
+function installPackages(packages: string[]): void {
+  if (packages.length === 0) return;
+  const pm = detectPackageManager();
+  const args =
+    pm === "npm"
+      ? ["install", "--save-dev", ...packages]
+      : pm === "yarn"
+        ? ["add", "--dev", ...packages]
+        : ["add", "-D", ...packages];
+  const result = spawnSync(pm, args, { stdio: "inherit" });
+  if (result.status !== 0) {
+    p.log.warn(`Install failed. Run manually: ${pm} add -D ${packages.join(" ")}`);
+  }
+}
 
 function supportsOxfmtConfigTs(): boolean {
   const [major, minor] = process.version.slice(1).split(".").map(Number) as [number, number];
@@ -168,6 +191,15 @@ export async function run(): Promise<void> {
 
   if (addScriptsResult) {
     addScripts();
+  }
+
+  const toInstall: string[] = [];
+  if (setupOxlint && !isPackageExists("oxlint")) toInstall.push("oxlint");
+  if (setupOxfmt && !isPackageExists("oxfmt")) toInstall.push("oxfmt");
+
+  if (toInstall.length > 0) {
+    p.log.step(`Installing ${toInstall.join(", ")}…`);
+    installPackages(toInstall);
   }
 
   p.outro("Done!");
