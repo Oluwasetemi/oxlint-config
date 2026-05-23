@@ -194,6 +194,7 @@ export async function run(): Promise<void> {
   }
 
   const toInstall: string[] = [];
+  if (!isPackageExists("@setemiojo/oxlint-config")) toInstall.push("@setemiojo/oxlint-config");
   if (setupOxlint && !isPackageExists("oxlint")) toInstall.push("oxlint");
   if (setupOxfmt && !isPackageExists("oxfmt")) toInstall.push("oxfmt");
 
